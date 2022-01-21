@@ -1,25 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import ImageSlider from "./components/ImageSlider"; // import ImageSlider
+import "./App.css";
 
-function App() {
+const App = () => {
+  const [query, setQuery] = useState("");
+  const [images, setImages] = useState([]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    fetch(
+      `https://demo5110359.mockable.io/images`
+    )
+      .then((response) => response.json())
+      .then(({ images }) => images.map(({ webformatURL }) => webformatURL))
+      .then(setImages);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Image Slider</h1>
+
+      <form onSubmit={handleSubmit}>
+        <input type="text" onChange={(e) => setQuery(e.target.value)} />
+        <input type="submit" value="Search" />
+      </form>
+
+      <ImageSlider images={images} /> {/* return ImageSlider and pass images as a prop */}
     </div>
   );
-}
+};
 
 export default App;
